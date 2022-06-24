@@ -1,3 +1,4 @@
+from copy import Error
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -139,11 +140,29 @@ class PACO_UC():
         self.driver.quit()
 
     def adicionar_sumario(self, sumario:Sumario ):
+
+        if sumario.hora == 1: d = '1 h 00 m'
+        elif sumario.hora == 1.5: d = '1 h 30 m'
+        elif sumario.hora == 2: d = '2 h 00 m'
+        elif sumario.hora == 2.5: d = '2 h 30 m'
+        elif sumario.hora == 3: d = '3 h 00 m'
+        elif sumario.hora == 3.5: d = '3 h 30 m'
+        elif sumario.hora == 4: d = '4 h 00 m'
+        elif sumario.hora == 4.5: d = '4 h 30 m'
+        elif sumario.hora == 5: d = '5 h 00 m'
+        elif sumario.hora == 5.5: d = '5 h 30 m'
+        elif sumario.hora == 6: d = '6 h 00 m'
+        elif sumario.hora == 6.5: d = '6 h 30 m'
+        elif sumario.hora == 7: d = '7 h 00 m'
+        elif sumario.hora == 7.5: d = '7 h 30 m'
+        else:
+            raise Exception("Could not parse this class duration. ", sumario.hora)        
+
         self.adicionar_sumario_manual(
             sala=sumario.sala,
             sumario_txt=sumario.sumario,
             bibliografia_txt=sumario.bibliografia,
-            duracao='2 h 00 m' if sumario.hora == 2 else "",
+            duracao=d,
             data=sumario.date,
             attendance_mec_lst=sumario.presencas_mec
         )

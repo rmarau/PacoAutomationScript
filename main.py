@@ -46,7 +46,7 @@ else:
 
 PACO_UC_CODE = excel.get_uc_code()
 PACO_TP_CODE = excel.get_tp_code()
-DRY_RUN = DRY_RUN or excel.get_dry_run() # Gets the dry_run flag embedded in the xls
+DRY_RUN = DRY_RUN or excel.get_dry_run_bool() # Gets the dry_run flag embedded in the xls
 
 if DRY_RUN: print("Dry run: The script runs without updating data.")
 
