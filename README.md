@@ -15,10 +15,16 @@ If you don't understand this, then this project may not be of interest for you.
 
 1. Download the example folder
 2. Populate the xlsx file accordingly
-    * Do not change the name of the Sheets or the structure of the file (columns and heading lines)
+    * Do not change the sheet's name or the structure of the file (columns and heading lines)
+    * It's important that you fill the UC_code and TP_code correctly.
+    * If you don't know the codes, then run once with emty cells and check the error to find the codes.
 3. Update *paco-docker-run.sh* with your personal data
-4. Run the script from a terminal: ```sh paco-docker-run.sh```
-
+4. It's highly recommended a dry-run test beforehand
+5. Run the script from a terminal: ```sh paco-docker-run.sh```
+6. At any time during execution you may see the automated execution:
+    * Follow this URL in your favorite browser http://localhost:7900
+        * password: secret
+    
 ## Platforms:
 - Macos
 - Linux
