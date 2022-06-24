@@ -4,9 +4,9 @@
 XLS_FILE_NAME='UC.xlsx'
 
 PACO_USERNAME="utilizador-universal@ua.pt"
-#For a fully automated process you can type your password below
-#Be careful with open text passwords!
-#Otherwise the password will be prompted when needed
+#For a fully automated process you can fill your password below
+#Watch out! It's an open text password!
+#This is not mandatory - the password will be prompted as needed
 #PACO_PASSWORD="" 
 
 
@@ -26,6 +26,7 @@ docker run --rm -i -t \
 -e XLS_FULLPATH="/data/$XLS_FILE_NAME" \
 -e PACO_USERNAME="$PACO_USERNAME" \
 -e PACO_PASSWORD="$PACO_PASSWORD" \
+-e DRY_RUN="$DRY_RUN" \
 --shm-size="2g" rmarau/pacoautomationscript
 
 
