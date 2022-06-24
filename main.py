@@ -10,7 +10,8 @@ PACO_USERNAME = os.getenv('PACO_USERNAME')
 PACO_PASSWORD = os.getenv('PACO_PASSWORD')
 
 if not PACO_USERNAME or not PACO_PASSWORD:
-    print ("\nThe script is running without a proper username/password input.\nYou may type it in now.\n(Press <Enter> to ignore - you'll be asked at the authentication portal)")
+    print ("""\nThe script is running without a proper username/password input.
+    You may type it in now, or ignore (Press <Enter>) - you'll be asked at the authentication portal)""")
     if not PACO_USERNAME:
         PACO_USERNAME = getpass.getuser("Username: ").rstrip()
     else:
@@ -19,7 +20,7 @@ if not PACO_USERNAME or not PACO_PASSWORD:
        PACO_PASSWORD = getpass.getpass("Password: ")
 
 if not PACO_USERNAME or not PACO_PASSWORD:
-    print("Follow the instructions above to open the Firefox instance!!!")
+    print("You will have to fill your credentials. Follow the URL above to open the Firefox instance!!!")
 
 
 excel = Excel( nome = EXCEL_PATH )
@@ -60,6 +61,7 @@ with PACO_UC( uc_code=PACO_UC_CODE,
         print("####### ERROR #######")
         print("The number of Sumários in XLS and PACO is inconsistent.")
         print("Perform a manual check...")
+        print("It may be that multiple users are posting Sumários - This check may need to be reviewed.")
         quit()
 
     for sum in sumarios_to_publish:

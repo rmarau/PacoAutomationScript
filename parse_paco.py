@@ -76,13 +76,11 @@ class PACO_UC():
 
         #import code;code.interact(local=locals())
 
-
         #Sacar os vários das várias UC, filtrar a que tem o tp_code e extrair da lista
         elems_with_link_sumarios_g = ( elem for elem in self.driver.find_elements(By.PARTIAL_LINK_TEXT, "Gerir Turma") if elem.get_attribute("href") )
 
         if self.tp_code:
             elems_with_link_sumarios_g = (elem for elem in elems_with_link_sumarios_g if self.tp_code in elem.get_attribute("href") )
-
 
         elems_with_link_sumarios = list(elems_with_link_sumarios_g)
 
