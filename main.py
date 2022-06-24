@@ -63,7 +63,7 @@ with PACO_UC( uc_code=PACO_UC_CODE,
         quit()
 
     for sum in sumarios_to_publish:
-        print ("Updating Aula {}...",format(sum.aula) )
+        print ("Updating Aula {}...",format(sum.aula))
         paco.adicionar_sumario(sum)
 
     if not DRY_RUN:
