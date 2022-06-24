@@ -126,7 +126,7 @@ class PACO_UC():
 
 
         #Follow the link to "Gerir Sumários"
-        link_sumarios.click()
+        elems_with_link_sumarios[0].click()
 
         #Wait on "Lançar um novo"
         lançarElement = WebDriverWait(self.driver, 30).until(
