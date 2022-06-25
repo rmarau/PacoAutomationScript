@@ -17,7 +17,7 @@ If you don't understand this, then this project may not be of interest for you.
 2. Populate the xlsx file accordingly
     * Do not change the sheet's name or the structure of the file (columns and heading lines)
     * It's important that you fill the UC_code and TP_code correctly.
-    * If you don't know the codes, then run once with emty cells and check the error to find the codes.
+    * If you don't know the codes, run the script with emty cells and check the error to find the codes.
 3. Update *paco-docker-run.sh* with your personal data
 4. It's highly recommended a dry-run test beforehand
 5. Run the script from a terminal: ```sh paco-docker-run.sh```
@@ -25,6 +25,15 @@ If you don't understand this, then this project may not be of interest for you.
 6. At any time during execution you may see the automated process:
     * Open your favorite browser and follow: http://localhost:7900
         * password: secret
+
+### Good to Know
+
+The Excel file holds two tables (Planeamento and PresençaAulas). They are relationally dependent on the *Aula* number. It's your responsability to maintain consistency.
+Each time you run the script:
+ * It scans the Excel file to find *Sumários* not yet published.
+ * Of those, it checks whether the session ocuured or not (if at least one student attends that *Aula*).
+ * Updates PACO and stamps the Excel file with "PUBLISHED" status for that class session.
+    * Don't manually edit the Status column yourself
     
 ## Platforms:
 - Macos
