@@ -21,8 +21,9 @@ If you don't understand this, then this project may not be of interest for you.
 3. Update *paco-docker-run.sh* with your personal data
 4. It's highly recommended a dry-run test beforehand
 5. Run the script from a terminal: ```sh paco-docker-run.sh```
-6. At any time during execution you may see the automated execution:
-    * Follow this URL in your favorite browser http://localhost:7900
+    * The first time you run the script takes some additional time to download the image and setup the docker container
+6. At any time during execution you may see the automated process:
+    * Open your favorite browser and follow: http://localhost:7900
         * password: secret
     
 ## Platforms:
