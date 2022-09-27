@@ -168,10 +168,20 @@ class PACO_UC():
     def contar_sumarios(self):
         get_sumarios_list_tr = lambda wd: wd.find_elements(By.XPATH, "//*[@class='table_cell_impar' or @class='table_cell_par']")
 
+
+        def locat_or(wd):
+            head = wd.find_element(By.CLASS_NAME, "table_head")
+            if head and head.text == "ATENÇÃO":
+                return True
+
+            if wd.find_element(By.CLASS_NAME, "table_footer"):
+                return True
+
+            return False
+
+
         self.driver.get(LISTA_SUMARIOS_URL(self.tp_code))
-        footer = WebDriverWait(self.driver, 30).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "table_footer"))
-        )
+        WebDriverWait(self.driver, 30).until( locat_or )
 
         # To get the number of Sumários I could parse footer.text ("6 Sumários")
         # but I'll count the table rows
