@@ -18,8 +18,8 @@ LISTA_SUMARIOS_URL = lambda tp_code: "https://paco.ua.pt/disciplinas/suporte/lis
 class PACO_UC():
 
     def __init__(self, uc_code, tp_code, username=None, password=None, dry_run=False):
-        self.uc_code = uc_code
-        self.tp_code = tp_code
+        self.uc_code = str(uc_code)
+        self.tp_code = str(tp_code)
         self.username = username if username else None   #empty username becomes None
         self.password = password if password else None   #empty password becomes None
         self.dry_run = dry_run

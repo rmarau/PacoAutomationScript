@@ -51,6 +51,7 @@ DRY_RUN = DRY_RUN or excel.get_dry_run_bool() # Gets the dry_run flag embedded i
 
 if DRY_RUN: print("Dry run: The script runs without updating data.")
 
+print ("Opening Firefox...")
 with PACO_UC( uc_code=PACO_UC_CODE,
               tp_code=PACO_TP_CODE,
               username=PACO_USERNAME,
