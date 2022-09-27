@@ -137,7 +137,7 @@ class PACO_UC():
     def _leave(self):
         self.driver.quit()
 
-    def adicionar_sumario(self, sumario:Sumario ):
+    def adicionar_sumario(self, sumario:Sumario, list_with_published_sumarios ):
 
         if sumario.hora == 1: d = '1 h 00 m'
         elif sumario.hora == 1.5: d = '1 h 30 m'
@@ -156,38 +156,53 @@ class PACO_UC():
         else:
             raise Exception("Could not parse this class duration. ", sumario.hora)        
 
-        self.adicionar_sumario_manual(
+        return self.adicionar_sumario_manual(
             sala=sumario.sala,
             sumario_txt=sumario.sumario,
             bibliografia_txt=sumario.bibliografia,
             duracao=d,
             data=sumario.date,
-            attendance_mec_lst=sumario.presencas_mec
+            attendance_mec_lst=sumario.presencas_mec,
+            list_with_published_sumarios=list_with_published_sumarios
         )
-
-    def contar_sumarios(self):
+    
+    def _process_sumarios_actuais(self):
+        """ Assuming the page is loaded or loading... """
         get_sumarios_list_tr = lambda wd: wd.find_elements(By.XPATH, "//*[@class='table_cell_impar' or @class='table_cell_par']")
 
+        def waittest(locator):
+            def check_condition(wd):
+                head = wd.find_element(By.CLASS_NAME, "table_head")
+                if head and head.text == "ATENÇÃO":
+                    return True
 
-        def locat_or(wd):
-            head = wd.find_element(By.CLASS_NAME, "table_head")
-            if head and head.text == "ATENÇÃO":
-                return True
+                if wd.find_element(By.CLASS_NAME, "table_footer"):
+                    return True
 
-            if wd.find_element(By.CLASS_NAME, "table_footer"):
-                return True
+                return False
+            return check_condition
 
-            return False
+        WebDriverWait(self.driver, 30).until( waittest )
 
+        tr_elements_lst = get_sumarios_list_tr(self.driver)
 
+        a_elements_lst = ( elem.find_element(By.TAG_NAME, "a") for elem in tr_elements_lst )
+
+        sumarios_code_lst = [ re.match(r".*idaula=([1234567890]*).*", elem.get_attribute("href")).group(1) for elem in a_elements_lst ]
+
+        # print(sumarios_code_lst)
+        return sumarios_code_lst
+
+    
+    def contar_sumarios(self):
         self.driver.get(LISTA_SUMARIOS_URL(self.tp_code))
-        WebDriverWait(self.driver, 30).until( locat_or )
+        return len(self._process_sumarios_actuais())
+    
+    def get_sumarios_codes_lst(self):
+        self.driver.get(LISTA_SUMARIOS_URL(self.tp_code))
+        return self._process_sumarios_actuais()
 
-        # To get the number of Sumários I could parse footer.text ("6 Sumários")
-        # but I'll count the table rows
-        return len(get_sumarios_list_tr(self.driver))
-
-    def adicionar_sumario_manual(self, sala, data, sumario_txt, bibliografia_txt, duracao='2 h 00 m', attendance_mec_lst=[]):
+    def adicionar_sumario_manual(self, sala, data, sumario_txt, bibliografia_txt, duracao='2 h 00 m', attendance_mec_lst=[], list_with_published_sumarios=[]):
 
         get_students_list_tr = lambda wd: wd.find_elements(By.XPATH, "//*[@class='table_cell_impar' or @class='table_cell_par']")
 
@@ -256,7 +271,12 @@ class PACO_UC():
             #Click submeter
             self.driver.find_element(By.ID, "submeter").click()
             #Wait jump to suporte/lista_sumarios.asp
-            time.sleep(1)
+            new_sumarios_list = self._process_sumarios_actuais()
+
+            #Get te newly added sumário code
+            e = next(iter(set(new_sumarios_list)-set(list_with_published_sumarios)))
+
+            return e
         else:
             #Click go back
             # Wait jump to suporte/gere_turmas.asp
@@ -265,4 +285,4 @@ class PACO_UC():
             aElement = WebDriverWait(self.driver, 30).until(
                 EC.presence_of_element_located((By.LINK_TEXT, "Lista Turmas"))
             )
-            time.sleep(1)
+            return None

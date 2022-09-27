@@ -1,3 +1,4 @@
+from typing import List
 from openpyxl import load_workbook
 from openpyxl.utils.cell import coordinate_from_string, column_index_from_string, get_column_letter
 from pathlib import Path
@@ -17,7 +18,6 @@ EXCEL_SHEET_PLANNING_COL_SALA = "D"
 EXCEL_SHEET_PLANNING_COL_STATUS = "E"
 EXCEL_SHEET_PLANNING_COL_SUMARIO = "F"
 EXCEL_SHEET_PLANNING_COL_BIBLIOGRAFIA = "G"
-EXCEL_SHEET_PUBLISHED_LABEL = "PUBLISHED"
 
 EXCEL_SHEET_ATTENDANCE = "PresençaAulas"
 EXCEL_SHEET_ATTENDANCE_LINHA_SEM_CABECALHOS = 4
@@ -112,11 +112,11 @@ class Excel:
         return ( s for s in self.get_sumarios_bulk() if s.hora is not None and int(s.hora)>0 )
 
     def get_sumarios_marked_published(self):
-        return ( s for s in self.get_sumarios_hours_filtered() if s.status is not None and s.status == EXCEL_SHEET_PUBLISHED_LABEL)
+        return ( s for s in self.get_sumarios_hours_filtered() if s.isPublished)
 
     def get_sumarios_to_publish(self):
         """Filter out Sumários already published (marked as)"""
-        return ( s for s in self.get_sumarios_hours_filtered() if s.status is None or s.status != EXCEL_SHEET_PUBLISHED_LABEL)
+        return ( s for s in self.get_sumarios_hours_filtered() if not s.isPublished )
 
     def get_sumarios_to_publish_with_attendance_filled(self):
         """ Filter sumarios with at least one student attending.
@@ -124,11 +124,16 @@ class Excel:
         return ( s for s in self.get_sumarios_to_publish() if s.presencas_mec )
 
 
-    def update_status_published(self, in_aulas):
+    def update_status_published(self, aulas_topublish:List[Sumario]):
+        
+        in_aulas = [s.aula for s in aulas_topublish]
+        in_aulas_map = dict([ (s.aula, s) for s in aulas_topublish])
+        
         #First compile the lines to update.
         #I have to do this search in data_only! and with so, I cannot save
         #because I'll loose formulas.
-        lines_to_update = []
+
+        lines_to_update_map = {}  #holds the status for each affected line
 
         wb = load_workbook(self._nome, read_only=True, data_only=True)
         ws = wb.active if self._sheet is None else wb[self._sheet]
@@ -137,7 +142,8 @@ class Excel:
         while True:
             hora = ws[f'{EXCEL_SHEET_PLANNING_COL_HORAS}{i}'].value
             aula = ws[f'{EXCEL_SHEET_PLANNING_COL_AULA}{i}'].value
-            if aula in in_aulas: lines_to_update.append(i)
+            if aula in in_aulas: 
+                lines_to_update_map[i] = in_aulas_map[aula].status
             if hora is None: break
             i += 1
         wb.close()
@@ -146,7 +152,8 @@ class Excel:
         wb = load_workbook(self._nome, read_only=False, data_only=False)
         ws = wb.active if self._sheet is None else wb[self._sheet]
 
-        for line in lines_to_update: ws[f'{EXCEL_SHEET_PLANNING_COL_STATUS}{line}'].value = EXCEL_SHEET_PUBLISHED_LABEL
+        for line, status in lines_to_update_map.items():
+            ws[f'{EXCEL_SHEET_PLANNING_COL_STATUS}{line}'].value = status
 
         #wb.save(filename="t.xlsx")
         wb.save(filename=self._nome)

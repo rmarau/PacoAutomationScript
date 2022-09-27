@@ -58,19 +58,31 @@ with PACO_UC( uc_code=PACO_UC_CODE,
               password=PACO_PASSWORD,
               dry_run=DRY_RUN ) as paco:
 
-    if paco.contar_sumarios() != len(sumarios_published):
-        print("####### ERROR #######")
-        print("The number of Sumários in XLS and PACO is inconsistent.")
-        print("Perform a manual check...")
-        print("It may be that multiple users are posting Sumários - This check may need to be reviewed.")
+    paco_sumarios_published_codes = paco.get_sumarios_codes_lst()
+    xls_sumarios_published_codes = [ s.publish_code for s in sumarios_published]
+
+    # #In case this turma has a single teacher publishing
+    # if set(paco_sumarios_published_codes) != set(xls_sumarios_published_codes):
+    #     print("####### ERROR #######")
+    #     print("The number (and codes) of Sumários in XLS and PACO is inconsistent.")
+    #     quit()
+    
+    #Check whether all sumários in XLS (published) are in paco.
+    if not set(xls_sumarios_published_codes).issubset(set(paco_sumarios_published_codes)):
+        print("####### INCONSISTENCY ERROR #######")
+        print("There are sumários in XLS (marked as published) that are not in PACO.")
+        print("xls_sumarios_published_codes: ", xls_sumarios_published_codes)
+        print("paco_sumarios_published_codes: ", paco_sumarios_published_codes)
         quit()
 
     for sum in sumarios_to_publish:
-        print ("Updating Aula {}...",format(sum.aula))
-        paco.adicionar_sumario(sum)
+        print ("Updating Aula {}...",format(sum.aula), end="")
+        sum.publish_code = paco.adicionar_sumario(sum, paco_sumarios_published_codes)
+        #Saving back in the same structure the published code - None if dry_run
+        print(" with code:", sum.publish_code)
 
     if not DRY_RUN:
-        excel.update_status_published([s.aula for s in sumarios_to_publish])
+        excel.update_status_published(sumarios_to_publish)
     else:
         print("Dry Run: Not updating excel")
         
