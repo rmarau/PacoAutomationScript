@@ -38,9 +38,7 @@ class Sumario:
     
     @publish_code.setter
     def publish_code(self, value):
-        if value is None:
-            self.status = None    
-        self.status = "PUBLISHED"+":"+str(value.strip())
+        self.status = None if value is None else "PUBLISHED"+":"+str(value.strip())
 
     def __repr__(self):
         return str((self.datetime, self.hora, self.aula, self.sala, self.status, self.sumario, self.bibliografia))
