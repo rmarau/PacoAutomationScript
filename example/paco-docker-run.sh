@@ -22,7 +22,7 @@ BASE=$(pwd)
 
 docker run --rm -i -t \
 -p 4444:4444 -p 7900:7900 \
---mount type=bind,src=$BASE/.,dst=/data \
+--mount type=bind,src=$"BASE"/.,dst=/data \
 -e XLS_FULLPATH="/data/$XLS_FILE_NAME" \
 -e PACO_USERNAME="$PACO_USERNAME" \
 -e PACO_PASSWORD="$PACO_PASSWORD" \
