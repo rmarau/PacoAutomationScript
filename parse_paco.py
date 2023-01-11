@@ -274,7 +274,7 @@ class PACO_UC():
             #Waiting for 2 seconds. 
             #This tries to fix an error where one sumario got the same code as the previous.
             #It's hard to reproduce - and this fix was not tested.
-            time.sleep(2)
+            #time.sleep(2)
 
             #Wait jump to suporte/lista_sumarios.asp
             new_sumarios_list = self._process_sumarios_actuais()
