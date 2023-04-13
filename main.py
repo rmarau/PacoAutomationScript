@@ -76,6 +76,8 @@ with PACO_UC( uc_code=PACO_UC_CODE,
         quit()
 
     for sum in sumarios_to_publish:
+        assert sum.sumario is not None and len(sum.sumario.strip())>0
+        
         print ("Updating Aula {}...",format(sum.aula), end="")
         sum.publish_code = paco.adicionar_sumario(sum, paco_sumarios_published_codes)
         paco_sumarios_published_codes.append(sum.publish_code) #Refresh the already published IDs
