@@ -1,7 +1,7 @@
 #docker build -t rmarau/pacoautomationscript:latest .
 #docker push rmarau/pacoautomationscript:latest
 
-FROM selenium/standalone-firefox:4.2.2-20220622
+FROM selenium/standalone-firefox:4.21.0
 
 LABEL maintainer="Ricardo Marau"
 
@@ -17,4 +17,5 @@ USER seluser
 COPY . /home/seluser/.
 
 
-CMD cd /home/seluser/ ; sh launchpad.sh paco-sync.sh
+#CMD cd /home/seluser/ ; sh launchpad.sh paco-sync.sh
+CMD ["sh", "-c", "cd /home/seluser/ && sh launchpad.sh paco-sync.sh"]
